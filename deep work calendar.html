@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DEEP WORK</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@300;400;500&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf9f6;
+  --bg2: #f3f1ec;
+  --bg3: #ede9e1;
+  --border: #ddd9d0;
+  --border2: #c8c3b8;
+  --text: #1a1814;
+  --text-mid: #5a5650;
+  --text-dim: #9a9590;
+  --accent: #c0392b;
+  --accent-soft: rgba(192,57,43,0.08);
+  --gold: #9a7d2a;
+  --gold-soft: rgba(154,125,42,0.10);
+  --green: #2e7d52;
+  --green-soft: rgba(46,125,82,0.08);
+  --blue: #2a5fa8;
+  --blue-soft: rgba(42,95,168,0.08);
+  --purple: #6b4fa0;
+  --purple-soft: rgba(107,79,160,0.08);
+  --orange: #c07020;
+  --orange-soft: rgba(192,112,32,0.08);
+
+  /* highlights */
+  --hl-yellow: #fff176;
+  --hl-green: #b9f6ca;
+  --hl-blue: #b3e5fc;
+  --hl-pink: #fce4ec;
+  --hl-orange: #ffe0b2;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { font-size: 16px; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Libre Franklin', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ────────────────────────────────────────────── */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2.5rem;
+  height: 62px;
+  border-bottom: 1.5px solid var(--border);
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(250,249,246,0.97);
+  backdrop-filter: blur(8px);
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.nav-logo em { color: var(--accent); font-style: italic; }
+
+.nav-tabs {
+  display: flex;
+  gap: 0.15rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px;
+}
+.nav-tab {
+  background: none;
+  border: none;
+  color: var(--text-mid);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.45rem 1.1rem;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+.nav-tab:hover { color: var(--text); }
+.nav-tab.active {
+  background: white;
+  color: var(--text);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.nav-date {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+/* ─── VIEWS ─────────────────────────────────────────── */
+.view { display: none; padding: 2rem 2.5rem; }
+.view.active { display: block; }
+
+/* ─── SECTION LABEL ─────────────────────────────────── */
+.sec-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
+
+/* ─── WEEK CALENDAR ─────────────────────────────────── */
+.week-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.week-nav { display:flex; align-items:center; gap:0.8rem; }
+.week-nav-btn {
+  width:34px; height:34px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--text-mid);
+  display: flex; align-items:center; justify-content:center;
+  transition: all 0.15s;
+}
+.week-nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.week-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-weight: 600;
+}
+.today-btn-nav {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--text-mid);
+  transition: all 0.15s;
+}
+.today-btn-nav:hover { border-color: var(--accent); color: var(--accent); }
+
+/* QUICK ADD BAR */
+.quick-add {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 1.2rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 110px 90px 130px 100px auto;
+  gap: 0.7rem;
+  align-items: end;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.f label {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.35rem;
+}
+.f input, .f select {
+  width: 100%;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 0.92rem;
+  padding: 0.52rem 0.75rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.f input:focus, .f select:focus { border-color: var(--accent); background: white; }
+.f select option { background: white; }
+
+.add-btn {
+  background: var(--accent);
+  border: none;
+  border-radius: 3px;
+  color: white;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 1.3rem;
+  height: 38px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.add-btn:hover { opacity: 0.85; }
+
+/* CALENDAR GRID */
+.cal-wrap {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: 56px repeat(7, 1fr);
+}
+
+.cal-col-header {
+  background: var(--bg2);
+  border-bottom: 1.5px solid var(--border);
+  border-left: 1px solid var(--border);
+  padding: 0.8rem 0.5rem;
+  text-align: center;
+}
+.cal-col-header:first-child { border-left: none; background: var(--bg); }
+
+.cdh-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 2px;
+}
+.cdh-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 600;
+  display: block;
+  line-height: 1;
+}
+.cdh-num.today { color: var(--accent); }
+
+.cal-time-label {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+  padding: 0.3rem 0.5rem;
+  text-align: right;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  vertical-align: top;
+  position: relative;
+  top: -0.55em;
+}
+
+.cal-cell {
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+  min-height: 56px;
+  padding: 3px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.cal-cell:hover { background: var(--bg2); }
+
+.cal-block {
+  border-radius: 3px;
+  padding: 3px 7px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.35;
+  cursor: pointer;
+  margin-bottom: 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  position: relative;
+  transition: opacity 0.15s;
+}
+.cal-block:hover { opacity: 0.8; }
+.cal-block.type-focus   { background: var(--accent-soft);  border-left:3px solid var(--accent);  color: #8a2015; }
+.cal-block.type-creative{ background: var(--gold-soft);    border-left:3px solid var(--gold);    color: #6a5010; }
+.cal-block.type-strategy{ background: var(--blue-soft);    border-left:3px solid var(--blue);    color: #1a3a78; }
+.cal-block.type-task    { background: var(--green-soft);   border-left:3px solid var(--green);   color: #1a5a32; }
+.cal-block.type-meeting { background: var(--purple-soft);  border-left:3px solid var(--purple);  color: #3a1a70; }
+.cal-block.done { opacity:0.38; }
+.cal-block-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
+  opacity: 0.7;
+}
+
+/* ─── DAY VIEW ──────────────────────────────────────── */
+.day-selector {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.day-sel-btn {
+  flex-shrink: 0;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  text-align: center;
+  min-width: 74px;
+  transition: all 0.15s;
+}
+.day-sel-btn:hover { border-color: var(--border2); }
+.day-sel-btn.active { border-color: var(--accent); background: var(--accent-soft); }
+.dsb-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  display: block;
+  margin-bottom: 2px;
+}
+.dsb-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: block;
+  line-height: 1.1;
+}
+
+.day-add-bar {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1.2rem;
+  display: grid;
+  grid-template-columns: 1fr 100px 130px auto;
+  gap: 0.6rem;
+  align-items: end;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.day-timeline-wrap {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  max-width: 800px;
+}
+
+.tl-row {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  min-height: 54px;
+}
+.tl-row:last-child { border-bottom: none; }
+.tl-hour {
+  width: 60px; flex-shrink: 0;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  padding: 0.55rem 0.6rem 0;
+  text-align: right;
+}
+.tl-cell {
+  flex: 1;
+  padding: 4px 6px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.tl-cell:hover { background: var(--bg2); }
+.tl-cell:hover .tl-cell-empty { opacity: 1; }
+.tl-cell-empty {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--border2);
+  padding: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.tl-block {
+  border-radius: 4px;
+  padding: 7px 10px;
+  margin-bottom: 4px;
+  position: relative;
+  transition: box-shadow 0.15s;
+}
+.tl-block:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.tl-block.type-focus   { background: var(--accent-soft);  border-left:4px solid var(--accent); }
+.tl-block.type-creative{ background: var(--gold-soft);    border-left:4px solid var(--gold); }
+.tl-block.type-strategy{ background: var(--blue-soft);    border-left:4px solid var(--blue); }
+.tl-block.type-task    { background: var(--green-soft);   border-left:4px solid var(--green); }
+.tl-block.type-meeting { background: var(--purple-soft);  border-left:4px solid var(--purple); }
+.tl-block.done { opacity: 0.4; }
+
+.tl-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.tl-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-mid);
+  display: flex;
+  gap: 0.9rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.running-dot {
+  width: 7px; height: 7px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: blink 1.1s infinite;
+  display: inline-block;
+  margin-right: 3px;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.tl-actions {
+  position: absolute; right: 8px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; gap: 4px;
+  opacity: 0; transition: opacity 0.15s;
+}
+.tl-block:hover .tl-actions { opacity: 1; }
+
+.tlb-btn {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-mid);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  padding: 3px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.12s;
+}
+.tlb-btn:hover { border-color: var(--text); color: var(--text); }
+.tlb-btn.start-btn { border-color: var(--green); color: var(--green); }
+.tlb-btn.stop-btn  { border-color: var(--accent); color: var(--accent); }
+.tlb-btn.done-btn  { border-color: var(--gold); color: var(--gold); }
+
+/* ─── HIGHLIGHT TOOLBAR ─────────────────────────────── */
+.highlight-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.2rem;
+  width: fit-content;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.hl-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-right: 0.3rem;
+}
+.hl-btn {
+  width: 22px; height: 22px;
+  border-radius: 3px;
+  border: 1.5px solid var(--border);
+  cursor: pointer;
+  transition: transform 0.12s, box-shadow 0.12s;
+  position: relative;
+}
+.hl-btn:hover { transform: scale(1.15); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+.hl-btn.active { border-color: var(--text); box-shadow: 0 0 0 2px var(--text); }
+.hl-btn.hl-yellow { background: var(--hl-yellow); }
+.hl-btn.hl-green  { background: var(--hl-green); }
+.hl-btn.hl-blue   { background: var(--hl-blue); }
+.hl-btn.hl-pink   { background: var(--hl-pink); }
+.hl-btn.hl-orange { background: var(--hl-orange); }
+.hl-btn.hl-none   { background: white; }
+.hl-divider { width:1px; height:18px; background: var(--border); margin: 0 0.2rem; }
+
+/* Highlight classes for tasks/projects */
+.hl-yellow { background: var(--hl-yellow) !important; }
+.hl-green  { background: var(--hl-green) !important; }
+.hl-blue   { background: var(--hl-blue) !important; }
+.hl-pink   { background: var(--hl-pink) !important; }
+.hl-orange { background: var(--hl-orange) !important; }
+
+/* ─── TASKS + PROJECTS LAYOUT ───────────────────────── */
+.work-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+}
+
+/* TABS inside work view */
+.work-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+.work-tab {
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  padding: 0.55rem 1.4rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.work-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.work-tab:hover:not(.active) { color: var(--text); }
+
+/* ADD BARS */
+.task-add-bar, .project-add-bar {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 1.2rem;
+  display: grid;
+  gap: 0.6rem;
+  align-items: end;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+.task-add-bar { grid-template-columns: 1fr 120px 150px auto; }
+.project-add-bar { grid-template-columns: 1fr 150px auto; }
+
+/* FILTERS */
+.work-filters {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+}
+.wf-btn {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-mid);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.wf-btn.active { background: var(--text); color: white; border-color: var(--text); }
+.wf-btn:hover:not(.active) { border-color: var(--border2); }
+
+/* TASK CARD */
+.task-card {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  transition: all 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.task-card:hover { border-color: var(--border2); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.task-card.done { opacity: 0.45; }
+.task-card.done .task-name { text-decoration: line-through; color: var(--text-dim); }
+.task-card.running { border-color: var(--green); background: #f0faf4; }
+
+.t-check {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border2);
+  border-radius: 4px;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex; align-items:center; justify-content:center;
+  transition: all 0.15s;
+}
+.task-card.done .t-check { background: var(--green); border-color: var(--green); }
+
+.task-info { flex: 1; min-width: 0; }
+.task-name {
+  font-size: 0.97rem;
+  font-weight: 500;
+  margin-bottom: 3px;
+  padding: 1px 2px;
+  border-radius: 2px;
+  transition: background 0.1s;
+}
+.task-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.prio {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+.prio.high   { background: rgba(192,57,43,0.1); color: #8a1a10; }
+.prio.medium { background: rgba(154,125,42,0.12); color: #5a4010; }
+.prio.low    { background: var(--bg3); color: var(--text-dim); }
+
+.task-elapsed {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--green);
+  min-width: 56px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.task-btns { display: flex; gap: 3px; }
+.t-btn {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-dim);
+  width: 30px; height: 30px;
+  display: flex; align-items:center; justify-content:center;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.t-btn:hover { border-color: var(--border2); color: var(--text); }
+.t-btn.start { border-color: var(--green); color: var(--green); }
+.t-btn.stop  { border-color: var(--accent); color: var(--accent); }
+.t-btn.hl-pick { font-size: 0.65rem; width: auto; padding: 0 7px; }
+
+/* PROJECT CARD */
+.project-card {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  margin-bottom: 0.7rem;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  transition: box-shadow 0.15s;
+}
+.project-card:hover { box-shadow: 0 3px 12px rgba(0,0,0,0.08); }
+
+.project-header {
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.project-header:hover { background: var(--bg2); }
+
+.proj-toggle {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+.project-card.open .proj-toggle { transform: rotate(90deg); }
+
+.proj-name {
+  font-size: 1.02rem;
+  font-weight: 600;
+  flex: 1;
+  padding: 1px 3px;
+  border-radius: 2px;
+}
+
+.proj-status {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  padding: 2px 8px;
+  border-radius: 2px;
+  letter-spacing: 0.08em;
+}
+.proj-status.active  { background: var(--blue-soft); color: var(--blue); }
+.proj-status.paused  { background: var(--orange-soft); color: var(--orange); }
+.proj-status.done    { background: var(--green-soft); color: var(--green); }
+
+.proj-progress {
+  height: 3px;
+  background: var(--bg3);
+}
+.proj-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.4s;
+}
+
+.proj-body {
+  display: none;
+  padding: 0.3rem 1.2rem 1rem 1.2rem;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+.project-card.open .proj-body { display: block; }
+
+.proj-subtask-add {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+  padding-top: 0.8rem;
+}
+.proj-subtask-input {
+  flex: 1;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 0.88rem;
+  padding: 0.45rem 0.8rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.proj-subtask-input:focus { border-color: var(--accent); }
+
+.subtask-add-btn {
+  background: var(--text);
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 0 0.9rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.subtask-add-btn:hover { opacity: 0.75; }
+
+.subtask-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 3px;
+  margin-bottom: 3px;
+  transition: background 0.1s;
+}
+.subtask-item:hover { background: white; }
+.subtask-item.done .subtask-name { text-decoration: line-through; color: var(--text-dim); }
+
+.st-check {
+  width: 16px; height: 16px;
+  border: 2px solid var(--border2);
+  border-radius: 3px;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex; align-items:center; justify-content:center;
+  transition: all 0.12s;
+}
+.subtask-item.done .st-check { background: var(--green); border-color: var(--green); }
+
+.subtask-name {
+  flex: 1;
+  font-size: 0.9rem;
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+.st-del {
+  background: none; border: none;
+  color: var(--border2); font-size: 0.85rem;
+  cursor: pointer; transition: color 0.12s;
+  line-height: 1;
+}
+.st-del:hover { color: var(--accent); }
+
+.proj-footer {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+}
+.proj-foot-btn {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  color: var(--text-mid);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.proj-foot-btn:hover { border-color: var(--border2); color: var(--text); }
+.proj-foot-btn.del { border-color: #e8c0bc; color: #c05050; }
+.proj-foot-btn.del:hover { background: #fef0ef; }
+
+/* ─── SIDEBAR ─────────────────────────────────────────── */
+.sidebar-card {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.42rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.9rem;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.sv-red { color: var(--accent); }
+.sv-green { color: var(--green); }
+.sv-gold { color: var(--gold); }
+
+.reminder-item {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.88rem;
+}
+.reminder-item:last-child { border-bottom: none; }
+.rem-time {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.64rem;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.rem-urgent { color: var(--accent); font-weight: 600; }
+
+.quote-side {
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-left: 4px solid var(--gold);
+  border-radius: 4px;
+  padding: 1.2rem 1.4rem;
+}
+.qs-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+.qs-by {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--text-dim);
+}
+
+/* ─── MODAL ────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(26,24,20,0.45);
+  z-index: 200;
+  display: flex; align-items:center; justify-content:center;
+  backdrop-filter: blur(5px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+
+.modal {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 2rem;
+  width: 480px; max-width: 92vw;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.15);
+  transform: translateY(10px);
+  transition: transform 0.2s;
+}
+.modal-overlay.open .modal { transform: translateY(0); }
+
+.modal-h {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.4rem;
+}
+.modal-field { margin-bottom: 0.9rem; }
+.modal-field label {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 0.3rem;
+}
+.modal-field input, .modal-field select, .modal-field textarea {
+  width: 100%;
+  background: var(--bg2);
+  border: 1.5px solid var(--border);
+  border-radius: 3px;
+  color: var(--text);
+  font-family: 'Libre Franklin', sans-serif;
+  font-size: 0.92rem;
+  padding: 0.55rem 0.8rem;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.modal-field input:focus, .modal-field select:focus, .modal-field textarea:focus { border-color: var(--accent); background: white; }
+.modal-field select option { background: white; }
+.modal-2col { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+.modal-actions { display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1.4rem; }
+.btn-c {
+  background: none; border: 1.5px solid var(--border); border-radius:3px;
+  padding: 0.55rem 1.2rem; font-family:'IBM Plex Mono',monospace; font-size:0.7rem;
+  letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; color:var(--text-mid);
+  transition: all 0.12s;
+}
+.btn-c:hover { border-color: var(--border2); color: var(--text); }
+.btn-s {
+  background: var(--accent); color: white; border: none; border-radius: 3px;
+  padding: 0.55rem 1.4rem; font-family:'IBM Plex Mono',monospace; font-size:0.7rem;
+  letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
+  transition: opacity 0.12s;
+}
+.btn-s:hover { opacity: 0.85; }
+.btn-d {
+  background: none; border: 1.5px solid #e8c0bc; color: #c05050;
+  border-radius: 3px; padding: 0.55rem 1rem; font-family:'IBM Plex Mono',monospace;
+  font-size:0.7rem; cursor:pointer; transition: all 0.12s; margin-right:auto;
+}
+.btn-d:hover { background: #fef0ef; }
+
+/* ─── TOAST ─────────────────────────────────────────── */
+.toast {
+  position: fixed; top: 74px; right: 20px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 5px;
+  padding: 0.85rem 1.2rem;
+  font-size: 0.88rem;
+  z-index: 300; max-width: 300px;
+  transform: translateX(120%);
+  transition: transform 0.3s;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+.toast.show { transform: translateX(0); }
+.toast-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing:0.1em; text-transform:uppercase;
+  color: var(--accent); margin-bottom: 3px;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(5px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.task-card, .project-card { animation: fadeUp 0.18s ease; }
+
+@media (max-width: 1000px) {
+  .work-layout { grid-template-columns: 1fr; }
+  .quick-add { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 680px) {
+  nav { padding: 0 1.2rem; }
+  .view { padding: 1.2rem; }
+  .task-add-bar, .project-add-bar { grid-template-columns: 1fr 1fr; }
+  .day-add-bar { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Deep <em>Work</em></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showView('week',this)">Εβδομάδα</button>
+    <button class="nav-tab" onclick="showView('day',this)">Ημέρα</button>
+    <button class="nav-tab" onclick="showView('work',this)">Tasks & Projects</button>
+  </div>
+  <div class="nav-right">
+    <div class="nav-date" id="navDate"></div>
+  </div>
+</nav>
+
+<!-- ══════════════ WEEK VIEW ══════════════ -->
+<div class="view active" id="view-week">
+  <div class="week-header">
+    <div class="week-nav">
+      <button class="week-nav-btn" onclick="shiftWeek(-1)">‹</button>
+      <div class="week-title" id="weekTitle"></div>
+      <button class="week-nav-btn" onclick="shiftWeek(1)">›</button>
+      <button class="today-btn-nav" onclick="goToday()">Σήμερα</button>
+    </div>
+  </div>
+
+  <div class="quick-add">
+    <div class="f"><label>Τίτλος</label><input id="qTitle" placeholder="π.χ. Deep Work — Στρατηγική Bathify"></div>
+    <div class="f"><label>Ημέρα</label>
+      <select id="qDay">
+        <option value="0">Κυριακή</option><option value="1">Δευτέρα</option>
+        <option value="2">Τρίτη</option><option value="3">Τετάρτη</option>
+        <option value="4">Πέμπτη</option><option value="5">Παρασκευή</option>
+        <option value="6">Σάββατο</option>
+      </select>
+    </div>
+    <div class="f"><label>Ώρα</label><input type="time" id="qTime" value="09:00"></div>
+    <div class="f"><label>Διάρκεια</label>
+      <select id="qDur">
+        <option value="0.5">30 λεπτά</option><option value="1">1 ώρα</option>
+        <option value="1.5">1.5 ώρα</option><option value="2" selected>2 ώρες</option>
+        <option value="3">3 ώρες</option><option value="4">4 ώρες</option>
+      </select>
+    </div>
+    <div class="f"><label>Τύπος</label>
+      <select id="qType">
+        <option value="focus">Βαθιά Εστίαση</option><option value="creative">Δημιουργία</option>
+        <option value="strategy">Στρατηγική</option><option value="task">Task</option>
+        <option value="meeting">Συνάντηση</option>
+      </select>
+    </div>
+    <button class="add-btn" onclick="quickAdd()">+ Προσθήκη</button>
+  </div>
+
+  <div class="cal-wrap">
+    <div class="calendar-grid" id="calGrid"></div>
+  </div>
+</div>
+
+<!-- ══════════════ DAY VIEW ══════════════ -->
+<div class="view" id="view-day">
+  <div style="max-width:820px;margin:0 auto;">
+    <div class="day-selector" id="daySelector"></div>
+    <div class="day-add-bar">
+      <div class="f"><label>Τίτλος</label><input id="dTitle" placeholder="Νέο block για αυτή την ημέρα..."></div>
+      <div class="f"><label>Ώρα</label><input type="time" id="dTime" value="09:00"></div>
+      <div class="f"><label>Τύπος</label>
+        <select id="dType">
+          <option value="focus">Βαθιά Εστίαση</option><option value="creative">Δημιουργία</option>
+          <option value="strategy">Στρατηγική</option><option value="task">Task</option>
+          <option value="meeting">Συνάντηση</option>
+        </select>
+      </div>
+      <button class="add-btn" onclick="addDayBlock()">+ Προσθήκη</button>
+    </div>
+    <div class="day-timeline-wrap" id="dayTimeline"></div>
+  </div>
+</div>
+
+<!-- ══════════════ WORK VIEW ══════════════ -->
+<div class="view" id="view-work">
+  <div class="work-layout">
+    <!-- LEFT -->
+    <div>
+      <div class="work-tabs">
+        <button class="work-tab active" onclick="showWorkTab('tasks',this)">Tasks</button>
+        <button class="work-tab" onclick="showWorkTab('projects',this)">Projects</button>
+      </div>
+
+      <!-- TASKS TAB -->
+      <div id="wtab-tasks">
+        <!-- highlight toolbar -->
+        <div class="highlight-bar">
+          <span class="hl-label">Highlight</span>
+          <button class="hl-btn hl-yellow" onclick="setHL('hl-yellow',this)" title="Κίτρινο"></button>
+          <button class="hl-btn hl-green"  onclick="setHL('hl-green',this)"  title="Πράσινο"></button>
+          <button class="hl-btn hl-blue"   onclick="setHL('hl-blue',this)"   title="Μπλε"></button>
+          <button class="hl-btn hl-pink"   onclick="setHL('hl-pink',this)"   title="Ροζ"></button>
+          <button class="hl-btn hl-orange" onclick="setHL('hl-orange',this)" title="Πορτοκαλί"></button>
+          <div class="hl-divider"></div>
+          <button class="hl-btn hl-none"   onclick="setHL('',this)"          title="Χωρίς">✕</button>
+        </div>
+
+        <div class="task-add-bar">
+          <div class="f"><label>Task</label><input id="tName" placeholder="Νέο task..." onkeydown="if(event.key==='Enter')addTask()"></div>
+          <div class="f"><label>Προτεραιότητα</label>
+            <select id="tPrio"><option value="high">↑ Υψηλή</option><option value="medium" selected>— Μεσαία</option><option value="low">↓ Χαμηλή</option></select>
+          </div>
+          <div class="f"><label>Deadline</label><input type="date" id="tDeadline"></div>
+          <button class="add-btn" onclick="addTask()">+ Προσθήκη</button>
+        </div>
+
+        <div class="work-filters">
+          <button class="wf-btn active" onclick="setTF('all',this)">Όλα</button>
+          <button class="wf-btn" onclick="setTF('pending',this)">Εκκρεμή</button>
+          <button class="wf-btn" onclick="setTF('running',this)">▶ Εξέλιξη</button>
+          <button class="wf-btn" onclick="setTF('done',this)">Ολοκλ.</button>
+          <button class="wf-btn" onclick="setTF('high',this)">Σημαντικά</button>
+        </div>
+
+        <div id="tasksList"></div>
+      </div>
+
+      <!-- PROJECTS TAB -->
+      <div id="wtab-projects" style="display:none">
+        <div class="project-add-bar">
+          <div class="f"><label>Τίτλος Project</label><input id="pName" placeholder="π.χ. Νέο Showroom Χαλανδρίου..." onkeydown="if(event.key==='Enter')addProject()"></div>
+          <div class="f"><label>Κατάσταση</label>
+            <select id="pStatus"><option value="active">Ενεργό</option><option value="paused">Σε Παύση</option></select>
+          </div>
+          <button class="add-btn" onclick="addProject()">+ Νέο Project</button>
+        </div>
+
+        <!-- highlight toolbar for projects -->
+        <div class="highlight-bar" style="margin-bottom:1.2rem;">
+          <span class="hl-label">Highlight</span>
+          <button class="hl-btn hl-yellow" onclick="setHL('hl-yellow',this)" title="Κίτρινο"></button>
+          <button class="hl-btn hl-green"  onclick="setHL('hl-green',this)"  title="Πράσινο"></button>
+          <button class="hl-btn hl-blue"   onclick="setHL('hl-blue',this)"   title="Μπλε"></button>
+          <button class="hl-btn hl-pink"   onclick="setHL('hl-pink',this)"   title="Ροζ"></button>
+          <button class="hl-btn hl-orange" onclick="setHL('hl-orange',this)" title="Πορτοκαλί"></button>
+          <div class="hl-divider"></div>
+          <button class="hl-btn hl-none"   onclick="setHL('',this)"          title="Χωρίς">✕</button>
+        </div>
+
+        <div id="projectsList"></div>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div>
+      <div class="sidebar-card">
+        <div class="sec-label">Σήμερα</div>
+        <div class="stat-row"><span>Εκκρεμή tasks</span><span class="stat-val" id="sPending">0</span></div>
+        <div class="stat-row"><span>Σε εξέλιξη</span><span class="stat-val sv-green" id="sRunning">0</span></div>
+        <div class="stat-row"><span>Ολοκληρωμένα</span><span class="stat-val sv-gold" id="sDone">0</span></div>
+        <div class="stat-row"><span>Σύνολο χρόνου</span><span class="stat-val sv-red" id="sTime">0:00</span></div>
+        <div class="stat-row"><span>Projects ενεργά</span><span class="stat-val" id="sProjects">0</span></div>
+      </div>
+
+      <div class="sidebar-card">
+        <div class="sec-label">Υπενθυμίσεις</div>
+        <div id="remindersList"></div>
+      </div>
+
+      <div class="quote-side">
+        <div class="qs-text" id="sideQuote"></div>
+        <div class="qs-by" id="sideQuoteBy"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BLOCK MODAL ══ -->
+<div class="modal-overlay" id="blockModal">
+  <div class="modal">
+    <div class="modal-h" id="bModalH">Block</div>
+    <div class="modal-field"><label>Τίτλος</label><input id="mTitle"></div>
+    <div class="modal-2col">
+      <div class="modal-field"><label>Τύπος</label>
+        <select id="mType">
+          <option value="focus">Βαθιά Εστίαση</option><option value="creative">Δημιουργία</option>
+          <option value="strategy">Στρατηγική</option><option value="task">Task</option>
+          <option value="meeting">Συνάντηση</option>
+        </select>
+      </div>
+      <div class="modal-field"><label>Ώρα</label><input type="time" id="mTime"></div>
+    </div>
+    <div class="modal-2col">
+      <div class="modal-field"><label>Διάρκεια (ώρες)</label><input type="number" id="mDur" min="0.25" max="10" step="0.25" value="2"></div>
+      <div class="modal-field"><label>Ημέρα</label>
+        <select id="mDay">
+          <option value="0">Κυριακή</option><option value="1">Δευτέρα</option>
+          <option value="2">Τρίτη</option><option value="3">Τετάρτη</option>
+          <option value="4">Πέμπτη</option><option value="5">Παρασκευή</option>
+          <option value="6">Σάββατο</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Υπενθύμιση (λεπτά πριν)</label>
+      <input type="number" id="mRemind" min="0" max="120" step="5" value="15" style="width:90px;">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-d" id="bDelBtn" onclick="delBlock()">Διαγραφή</button>
+      <button class="btn-c" onclick="closeModal('blockModal')">Άκυρο</button>
+      <button class="btn-s" onclick="saveBlock()">Αποθήκευση</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <div class="toast-title" id="toastTitle"></div>
+  <div id="toastMsg"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let blocks   = JSON.parse(localStorage.getItem('dw3_blocks')   || '[]');
+let tasks    = JSON.parse(localStorage.getItem('dw3_tasks')    || '[]');
+let projects = JSON.parse(localStorage.getItem('dw3_projects') || '[]');
+
+let weekOffset = 0;
+let dayIndex   = new Date().getDay();
+let taskFilter = 'all';
+let activeHL   = '';
+let editingBlockId = null;
+let blockTick  = null;
+let taskTick   = null;
+
+const DAYS_EL    = ['Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο'];
+const DAYS_SHORT = ['Κυρ','Δευ','Τρί','Τετ','Πέμ','Παρ','Σάβ'];
+const HOURS = Array.from({length:20}, (_,i) => i + 5); // 05:00 – 24:00
+
+const QUOTES = [
+  { t:"Η βαθιά εργασία είναι σπάνια. Εκείνοι που την κατακτούν θα ευδοκιμήσουν.", a:"Cal Newport" },
+  { t:"Ποιότητα εργασίας = Χρόνος × Εντατικότητα εστίασης.", a:"Cal Newport" },
+  { t:"Η απλότητα είναι η τελική εκζήτηση. Πρέπει να δουλέψεις σκληρά για να κάνεις κάτι απλό.", a:"Steve Jobs" },
+  { t:"Εστίαση σημαίνει να λες όχι σε εκατό καλές ιδέες.", a:"Steve Jobs" },
+  { t:"Προτιμώ να κάνεις λιγότερα πράγματα εξαιρετικά καλά παρά πολλά μέτρια.", a:"Cal Newport" },
+  { t:"Ο χρόνος σου είναι περιορισμένος. Μην τον σπαταλάς ζώντας τη ζωή κάποιου άλλου.", a:"Steve Jobs" },
+];
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+function init() {
+  const now = new Date();
+  document.getElementById('navDate').textContent =
+    now.toLocaleDateString('el-GR',{weekday:'long',day:'numeric',month:'long'}).toUpperCase();
+  document.getElementById('qDay').value = now.getDay();
+  const q = QUOTES[Math.floor(Math.random()*QUOTES.length)];
+  document.getElementById('sideQuote').textContent = q.t;
+  document.getElementById('sideQuoteBy').textContent = '— ' + q.a;
+  renderWeekCal();
+  renderDaySelector();
+  renderDayTimeline();
+  renderTasks();
+  renderProjects();
+  updateStats();
+  renderReminders();
+  setInterval(reminderCheck, 30000);
+}
+
+function save() {
+  localStorage.setItem('dw3_blocks',   JSON.stringify(blocks));
+  localStorage.setItem('dw3_tasks',    JSON.stringify(tasks));
+  localStorage.setItem('dw3_projects', JSON.stringify(projects));
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function showView(name, btn) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='week') renderWeekCal();
+  if(name==='day')  { renderDaySelector(); renderDayTimeline(); }
+  if(name==='work') { renderTasks(); renderProjects(); updateStats(); renderReminders(); }
+}
+
+function showWorkTab(name, btn) {
+  document.querySelectorAll('[id^="wtab-"]').forEach(e=>e.style.display='none');
+  document.querySelectorAll('.work-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('wtab-'+name).style.display = 'block';
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════════
+// WEEK HELPERS
+// ═══════════════════════════════════════════
+function getWeekDates(off=0) {
+  const d = new Date();
+  d.setDate(d.getDate() - d.getDay() + off*7);
+  d.setHours(0,0,0,0);
+  return Array.from({length:7},(_,i)=>{ const x=new Date(d); x.setDate(d.getDate()+i); return x; });
+}
+function dk(d) { return d.toISOString().slice(0,10); }
+function shiftWeek(dir) { weekOffset+=dir; renderWeekCal(); }
+function goToday() { weekOffset=0; renderWeekCal(); }
+
+// ═══════════════════════════════════════════
+// WEEK CALENDAR
+// ═══════════════════════════════════════════
+function renderWeekCal() {
+  const dates = getWeekDates(weekOffset);
+  const todayStr = dk(new Date());
+  const ws=dates[0], we=dates[6];
+  document.getElementById('weekTitle').textContent =
+    ws.toLocaleDateString('el-GR',{day:'numeric',month:'short'}) + ' – ' +
+    we.toLocaleDateString('el-GR',{day:'numeric',month:'short',year:'numeric'});
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  // corner
+  const corner = ce('div','cal-col-header'); grid.appendChild(corner);
+
+  dates.forEach((d,i)=>{
+    const h = ce('div','cal-col-header');
+    const isT = dk(d)===todayStr;
+    h.innerHTML = `<span class="cdh-name">${DAYS_SHORT[i]}</span><span class="cdh-num${isT?' today':''}">${d.getDate()}</span>`;
+    grid.appendChild(h);
+  });
+
+  HOURS.forEach(h=>{
+    const tl = ce('div','cal-time-label');
+    tl.textContent = h.toString().padStart(2,'0')+':00';
+    grid.appendChild(tl);
+
+    dates.forEach((d,di)=>{
+      const cell = ce('div','cal-cell');
+      cell.onclick = ev => { if(ev.target===cell) openNewBlockModal(di,h); };
+      const dKey = dk(d);
+      blocks.filter(b=>b.dateKey===dKey && parseInt(b.time)==h).forEach(b=>{
+        const bl = ce('div',`cal-block type-${b.type}${b.done?' done':''}`);
+        bl.title = b.title;
+        bl.innerHTML = `<div>${b.title}</div><div class="cal-block-sub">${b.time} · ${b.duration}h</div>`;
+        bl.onclick = ev => { ev.stopPropagation(); openEditBlock(b.id); };
+        cell.appendChild(bl);
+      });
+      grid.appendChild(cell);
+    });
+  });
+}
+
+// ═══════════════════════════════════════════
+// QUICK ADD
+// ═══════════════════════════════════════════
+function quickAdd() {
+  const title = v('qTitle').trim();
+  if(!title) { focus('qTitle'); return; }
+  const di = parseInt(g('qDay').value);
+  const dates = getWeekDates(weekOffset);
+  blocks.push({
+    id:Date.now(), title,
+    dateKey: dk(dates[di]),
+    time: g('qTime').value,
+    duration: parseFloat(g('qDur').value)||2,
+    type: g('qType').value,
+    done:false, remind:15,
+    running:false, startTs:null, elapsedSec:0
+  });
+  g('qTitle').value='';
+  save(); renderWeekCal(); renderReminders();
+  toast('Block Προστέθηκε', `"${title}" → ${DAYS_EL[di]}`);
+}
+
+// ═══════════════════════════════════════════
+// DAY VIEW
+// ═══════════════════════════════════════════
+function renderDaySelector() {
+  const dates = getWeekDates(0);
+  const todayStr = dk(new Date());
+  document.getElementById('daySelector').innerHTML = dates.map((d,i)=>`
+    <button class="day-sel-btn ${i===dayIndex?'active':''}" onclick="selDay(${i})">
+      <span class="dsb-name">${DAYS_SHORT[i]}</span>
+      <span class="dsb-num" style="${dk(d)===todayStr?'color:var(--accent)':''}">${d.getDate()}</span>
+    </button>`).join('');
+}
+
+function selDay(idx) { dayIndex=idx; renderDaySelector(); renderDayTimeline(); }
+
+function addDayBlock() {
+  const title = v('dTitle').trim();
+  if(!title){ focus('dTitle'); return; }
+  const dates = getWeekDates(0);
+  blocks.push({
+    id:Date.now(), title,
+    dateKey: dk(dates[dayIndex]),
+    time: g('dTime').value,
+    duration: 1,
+    type: g('dType').value,
+    done:false, remind:15,
+    running:false, startTs:null, elapsedSec:0
+  });
+  g('dTitle').value='';
+  save(); renderDayTimeline(); renderWeekCal();
+}
+
+function renderDayTimeline() {
+  const dates = getWeekDates(0);
+  const dKey = dk(dates[dayIndex]);
+  const tl = document.getElementById('dayTimeline');
+  const typeL = {focus:'Εστίαση',creative:'Δημιουργία',strategy:'Στρατηγική',task:'Task',meeting:'Συνάντηση'};
+
+  tl.innerHTML = HOURS.map(h=>{
+    const hStr = h.toString().padStart(2,'0')+':00';
+    const dayBlocks = blocks.filter(b=>b.dateKey===dKey && parseInt(b.time)==h);
+
+    const blocksHtml = dayBlocks.map(b=>{
+      const elapsed = b.running&&b.startTs
+        ? (b.elapsedSec||0)+Math.floor((Date.now()-b.startTs)/1000)
+        : (b.elapsedSec||0);
+      const runHtml = b.running
+        ? `<span><span class="running-dot"></span>${fmtS(elapsed)}</span>` : (elapsed>0?`<span>${fmtS(elapsed)}</span>`:'');
+      const startBtn = !b.done&&!b.running ? `<button class="tlb-btn start-btn" onclick="startBlock(${b.id});event.stopPropagation()">▶ Έναρξη</button>` : '';
+      const stopBtn  = b.running ? `<button class="tlb-btn stop-btn" onclick="stopBlock(${b.id});event.stopPropagation()">■ Διακοπή</button>` : '';
+      const doneBtn  = !b.done ? `<button class="tlb-btn done-btn" onclick="doneBlock(${b.id});event.stopPropagation()">✓ Ολοκλ.</button>` : '';
+      return `<div class="tl-block type-${b.type}${b.done?' done':''}" onclick="openEditBlock(${b.id})">
+        <div class="tl-title">${b.title}</div>
+        <div class="tl-meta"><span>${b.time} · ${b.duration}h · ${typeL[b.type]}</span>${runHtml}</div>
+        <div class="tl-actions">${startBtn}${stopBtn}${doneBtn}</div>
+      </div>`;
+    }).join('');
+
+    return `<div class="tl-row">
+      <div class="tl-hour">${hStr}</div>
+      <div class="tl-cell" onclick="openNewBlockModal(${dayIndex},${h})">
+        ${blocksHtml}
+        ${!dayBlocks.length?'<div class="tl-cell-empty">+ Προσθήκη block</div>':''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function startBlock(id) {
+  const b = blocks.find(b=>b.id===id);
+  if(!b||b.running) return;
+  b.running=true; b.startTs=Date.now()-(b.elapsedSec||0)*1000;
+  save(); renderDayTimeline(); startBlockTick();
+}
+function stopBlock(id) {
+  const b = blocks.find(b=>b.id===id);
+  if(!b) return;
+  if(b.running&&b.startTs) b.elapsedSec=(b.elapsedSec||0)+Math.floor((Date.now()-b.startTs)/1000);
+  b.running=false; b.startTs=null; save(); renderDayTimeline();
+}
+function doneBlock(id) {
+  const b = blocks.find(b=>b.id===id);
+  if(!b) return;
+  if(b.running&&b.startTs) b.elapsedSec=(b.elapsedSec||0)+Math.floor((Date.now()-b.startTs)/1000);
+  b.running=false; b.startTs=null; b.done=true;
+  save(); renderDayTimeline(); renderWeekCal();
+}
+function startBlockTick() {
+  if(blockTick) return;
+  blockTick = setInterval(()=>{
+    if(!blocks.some(b=>b.running)){clearInterval(blockTick);blockTick=null;return;}
+    renderDayTimeline();
+  },1000);
+}
+
+// ═══════════════════════════════════════════
+// BLOCK MODAL
+// ═══════════════════════════════════════════
+function openNewBlockModal(di, h) {
+  editingBlockId = null;
+  g('bModalH').textContent = 'Νέο Block';
+  g('mTitle').value=''; g('mType').value='focus';
+  g('mTime').value = h.toString().padStart(2,'0')+':00';
+  g('mDur').value='2'; g('mDay').value=di; g('mRemind').value='15';
+  g('bDelBtn').style.display='none';
+  openModal('blockModal');
+}
+function openEditBlock(id) {
+  const b = blocks.find(b=>b.id===id); if(!b) return;
+  editingBlockId=id;
+  g('bModalH').textContent='Επεξεργασία Block';
+  g('mTitle').value=b.title; g('mType').value=b.type;
+  g('mTime').value=b.time; g('mDur').value=b.duration;
+  const dates = getWeekDates(weekOffset);
+  const di = dates.findIndex(d=>dk(d)===b.dateKey);
+  g('mDay').value=di>=0?di:1; g('mRemind').value=b.remind||15;
+  g('bDelBtn').style.display='block';
+  openModal('blockModal');
+}
+function saveBlock() {
+  const title=v('mTitle').trim(); if(!title) return;
+  const di=parseInt(g('mDay').value);
+  const dates=getWeekDates(weekOffset);
+  if(editingBlockId) {
+    const b=blocks.find(b=>b.id===editingBlockId);
+    if(b){ b.title=title; b.type=g('mType').value; b.time=g('mTime').value;
+           b.duration=parseFloat(g('mDur').value)||1; b.dateKey=dk(dates[di]); b.remind=parseInt(g('mRemind').value)||15; }
+  } else {
+    blocks.push({id:Date.now(),title,dateKey:dk(dates[di]),time:g('mTime').value,
+      duration:parseFloat(g('mDur').value)||1,type:g('mType').value,
+      done:false,remind:parseInt(g('mRemind').value)||15,running:false,startTs:null,elapsedSec:0});
+  }
+  save(); closeModal('blockModal'); renderWeekCal(); renderDayTimeline(); renderReminders();
+}
+function delBlock() {
+  if(!editingBlockId) return;
+  blocks=blocks.filter(b=>b.id!==editingBlockId);
+  save(); closeModal('blockModal'); renderWeekCal(); renderDayTimeline();
+}
+
+// ═══════════════════════════════════════════
+// HIGHLIGHT
+// ═══════════════════════════════════════════
+function setHL(cls, btn) {
+  activeHL = cls;
+  document.querySelectorAll('.hl-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function applyHL(el, id, type) {
+  if(!activeHL) return;
+  if(type==='task') {
+    const t=tasks.find(t=>t.id===id);
+    if(t){ t.hl=activeHL; save(); renderTasks(); }
+  } else if(type==='project') {
+    const p=projects.find(p=>p.id===id);
+    if(p){ p.hl=activeHL; save(); renderProjects(); }
+  } else if(type==='subtask') {
+    projects.forEach(p=>{
+      const s=p.subtasks.find(s=>s.id===id);
+      if(s){ s.hl=activeHL; }
+    });
+    save(); renderProjects();
+  }
+}
+
+// ═══════════════════════════════════════════
+// TASKS
+// ═══════════════════════════════════════════
+function addTask() {
+  const name=v('tName').trim(); if(!name) return;
+  tasks.push({id:Date.now(),name,priority:g('tPrio').value,
+    deadline:g('tDeadline').value,done:false,running:false,startTs:null,elapsedSec:0,hl:''});
+  g('tName').value=''; g('tDeadline').value='';
+  save(); renderTasks(); updateStats(); renderReminders();
+}
+
+function setTF(f,btn) {
+  taskFilter=f;
+  document.querySelectorAll('.wf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTasks();
+}
+
+function renderTasks() {
+  let list=[...tasks];
+  if(taskFilter==='pending') list=list.filter(t=>!t.done&&!t.running);
+  else if(taskFilter==='running') list=list.filter(t=>t.running);
+  else if(taskFilter==='done') list=list.filter(t=>t.done);
+  else if(taskFilter==='high') list=list.filter(t=>t.priority==='high');
+
+  const el=document.getElementById('tasksList');
+  if(!list.length){ el.innerHTML='<div style="color:var(--text-dim);font-family:\'IBM Plex Mono\',monospace;font-size:0.75rem;padding:2rem 0;text-align:center;letter-spacing:0.1em;text-transform:uppercase;">Δεν υπάρχουν tasks</div>'; return; }
+
+  el.innerHTML=list.map(t=>{
+    const elapsed=t.running&&t.startTs ? (t.elapsedSec||0)+Math.floor((Date.now()-t.startTs)/1000) : (t.elapsedSec||0);
+    const isUrgent=t.deadline&&(new Date(t.deadline+'T23:59:00')-new Date())<86400000&&!t.done;
+    const startBtn=!t.done&&!t.running?`<button class="t-btn start" onclick="startTask(${t.id})" title="Έναρξη">▶</button>`:'';
+    const stopBtn=t.running?`<button class="t-btn stop" onclick="stopTask(${t.id})" title="Διακοπή">■</button>`:'';
+    return `<div class="task-card ${t.done?'done':''} ${t.running?'running':''} ${t.hl||''}" onclick="applyHL(this,${t.id},'task')">
+      <div class="t-check" onclick="toggleTask(${t.id});event.stopPropagation()">
+        ${t.done?'<svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>':''}
+      </div>
+      <div class="task-info">
+        <div class="task-name ${isUrgent?'sv-red':''}">${t.name}</div>
+        <div class="task-sub">
+          <span class="prio ${t.priority}">${t.priority==='high'?'↑ Υψηλή':t.priority==='medium'?'— Μεσαία':'↓ Χαμηλή'}</span>
+          ${t.deadline?`<span>📅 ${t.deadline}</span>`:''}
+          ${t.running?`<span><span class="running-dot"></span>Σε εξέλιξη · ${fmtS(elapsed)}</span>`:''}
+          ${isUrgent?'<span style="color:var(--accent)">⚠ Urgent</span>':''}
+        </div>
+      </div>
+      <div class="task-elapsed">${elapsed>0&&!t.done?fmtS(elapsed):''}</div>
+      <div class="task-btns">
+        ${startBtn}${stopBtn}
+        <button class="t-btn" onclick="delTask(${t.id});event.stopPropagation()" title="Διαγραφή">×</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  if(tasks.some(t=>t.running)&&!taskTick) startTaskTick();
+}
+
+function startTask(id) {
+  const t=tasks.find(t=>t.id===id); if(!t||t.running||t.done) return;
+  t.running=true; t.startTs=Date.now()-(t.elapsedSec||0)*1000;
+  save(); renderTasks(); updateStats(); startTaskTick();
+}
+function stopTask(id) {
+  const t=tasks.find(t=>t.id===id); if(!t) return;
+  if(t.running&&t.startTs) t.elapsedSec=(t.elapsedSec||0)+Math.floor((Date.now()-t.startTs)/1000);
+  t.running=false; t.startTs=null; save(); renderTasks(); updateStats();
+}
+function toggleTask(id) {
+  const t=tasks.find(t=>t.id===id); if(!t) return;
+  if(!t.done&&t.running) stopTask(id);
+  t.done=!t.done; save(); renderTasks(); updateStats();
+}
+function delTask(id) {
+  tasks=tasks.filter(t=>t.id!==id); save(); renderTasks(); updateStats(); renderReminders();
+}
+function startTaskTick() {
+  if(taskTick) return;
+  taskTick=setInterval(()=>{
+    const anyR=tasks.some(t=>t.running);
+    if(!anyR){clearInterval(taskTick);taskTick=null;return;}
+    renderTasks(); updateStats();
+  },1000);
+}
+
+// ═══════════════════════════════════════════
+// PROJECTS
+// ═══════════════════════════════════════════
+function addProject() {
+  const name=v('pName').trim(); if(!name) return;
+  projects.push({id:Date.now(),name,status:g('pStatus').value,subtasks:[],hl:''});
+  g('pName').value=''; save(); renderProjects(); updateStats();
+}
+
+function renderProjects() {
+  const el=document.getElementById('projectsList');
+  if(!projects.length){
+    el.innerHTML='<div style="color:var(--text-dim);font-family:\'IBM Plex Mono\',monospace;font-size:0.75rem;padding:2rem 0;text-align:center;letter-spacing:0.1em;text-transform:uppercase;">Δεν υπάρχουν projects</div>';
+    return;
+  }
+
+  el.innerHTML=projects.map(p=>{
+    const total=p.subtasks.length;
+    const done=p.subtasks.filter(s=>s.done).length;
+    const pct=total?Math.round(done/total*100):0;
+    const statusL={active:'Ενεργό',paused:'Σε Παύση',done:'Ολοκλ.'};
+    const isOpen=p.open;
+
+    const subtasksHtml=p.subtasks.map(s=>`
+      <div class="subtask-item ${s.done?'done':''} ${s.hl||''}" onclick="applyHL(this,${s.id},'subtask');event.stopPropagation()">
+        <div class="st-check" onclick="toggleSubtask(${p.id},${s.id});event.stopPropagation()">
+          ${s.done?'<svg width="9" height="7" viewBox="0 0 9 7" fill="none"><path d="M1 3.5L3.5 6L8 1" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>':''}
+        </div>
+        <div class="subtask-name">${s.name}</div>
+        <button class="st-del" onclick="delSubtask(${p.id},${s.id});event.stopPropagation()">×</button>
+      </div>`).join('');
+
+    return `<div class="project-card ${isOpen?'open':''} ${p.hl||''}" id="proj-${p.id}">
+      <div class="project-header" onclick="toggleProject(${p.id})">
+        <span class="proj-toggle">▶</span>
+        <div class="proj-name" onclick="applyHL(this,${p.id},'project');event.stopPropagation()">${p.name}</div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:var(--text-dim);margin-right:0.5rem;">${done}/${total}</span>
+        <span class="proj-status ${p.status}">${statusL[p.status]||p.status}</span>
+      </div>
+      <div class="proj-progress"><div class="proj-progress-fill" style="width:${pct}%"></div></div>
+      <div class="proj-body">
+        <div class="proj-subtask-add">
+          <input class="proj-subtask-input" id="st-inp-${p.id}" placeholder="Νέο sub-task..." onkeydown="if(event.key==='Enter')addSubtask(${p.id})">
+          <button class="subtask-add-btn" onclick="addSubtask(${p.id})">+</button>
+        </div>
+        ${subtasksHtml}
+        <div class="proj-footer">
+          <button class="proj-foot-btn" onclick="setProjectStatus(${p.id},'active')">Ενεργό</button>
+          <button class="proj-foot-btn" onclick="setProjectStatus(${p.id},'paused')">Παύση</button>
+          <button class="proj-foot-btn" onclick="setProjectStatus(${p.id},'done')">✓ Ολοκλ.</button>
+          <button class="proj-foot-btn del" onclick="delProject(${p.id})">Διαγραφή</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleProject(id) {
+  const p=projects.find(p=>p.id===id); if(!p) return;
+  p.open=!p.open; save(); renderProjects();
+}
+function addSubtask(pid) {
+  const inp=document.getElementById('st-inp-'+pid);
+  const name=inp.value.trim(); if(!name) return;
+  const p=projects.find(p=>p.id===pid); if(!p) return;
+  p.subtasks.push({id:Date.now(),name,done:false,hl:''});
+  inp.value=''; save(); renderProjects(); updateStats();
+}
+function toggleSubtask(pid,sid) {
+  const p=projects.find(p=>p.id===pid); if(!p) return;
+  const s=p.subtasks.find(s=>s.id===sid); if(!s) return;
+  s.done=!s.done; save(); renderProjects(); updateStats();
+}
+function delSubtask(pid,sid) {
+  const p=projects.find(p=>p.id===pid); if(!p) return;
+  p.subtasks=p.subtasks.filter(s=>s.id!==sid); save(); renderProjects(); updateStats();
+}
+function setProjectStatus(pid,status) {
+  const p=projects.find(p=>p.id===pid); if(!p) return;
+  p.status=status; save(); renderProjects(); updateStats();
+}
+function delProject(pid) {
+  projects=projects.filter(p=>p.id!==pid); save(); renderProjects(); updateStats();
+}
+
+// ═══════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════
+function updateStats() {
+  const pending=tasks.filter(t=>!t.done&&!t.running).length;
+  const running=tasks.filter(t=>t.running).length;
+  const done=tasks.filter(t=>t.done).length;
+  const activeP=projects.filter(p=>p.status==='active').length;
+  const totalSec=tasks.reduce((a,t)=>{
+    let s=t.elapsedSec||0;
+    if(t.running&&t.startTs) s+=Math.floor((Date.now()-t.startTs)/1000);
+    return a+s;
+  },0);
+  g('sPending').textContent=pending;
+  g('sRunning').textContent=running;
+  g('sDone').textContent=done;
+  g('sTime').textContent=fmtS(totalSec);
+  g('sProjects').textContent=activeP;
+}
+
+// ═══════════════════════════════════════════
+// REMINDERS
+// ═══════════════════════════════════════════
+function renderReminders() {
+  const el=document.getElementById('remindersList');
+  const now=new Date();
+  const todayStr=dk(now);
+  const tomorrowStr=dk(new Date(now.getTime()+86400000));
+  const items=[];
+
+  blocks.forEach(b=>{
+    if(b.done) return;
+    const bd=new Date(b.dateKey+'T'+b.time);
+    const diff=bd-now;
+    if(diff>0&&diff<48*3600000) {
+      const label=b.dateKey===todayStr?'Σήμερα':(b.dateKey===tomorrowStr?'Αύριο':b.dateKey);
+      items.push({text:b.title, sub:`${label} ${b.time}`, urgent:diff<(b.remind||15)*60000});
+    }
+  });
+  tasks.forEach(t=>{
+    if(t.done||!t.deadline) return;
+    const dl=new Date(t.deadline+'T23:59:00');
+    const diff=dl-now;
+    if(diff>0&&diff<48*3600000) {
+      const label=t.deadline===todayStr?'Σήμερα':(t.deadline===tomorrowStr?'Αύριο':t.deadline);
+      items.push({text:t.name, sub:`Deadline: ${label}`, urgent:diff<12*3600000});
+    }
+  });
+
+  if(!items.length) { el.innerHTML='<div style="color:var(--text-dim);font-size:0.85rem;padding:0.5rem 0;">Δεν υπάρχουν υπενθυμίσεις</div>'; return; }
+  el.innerHTML=items.slice(0,6).map(r=>`
+    <div class="reminder-item">
+      <div class="rem-time">${r.sub}</div>
+      <div class="${r.urgent?'rem-urgent':''}">${r.urgent?'⚠ ':''}"${r.text}"</div>
+    </div>`).join('');
+}
+
+function reminderCheck() {
+  const now=new Date();
+  blocks.forEach(b=>{
+    if(b.done||b._notified) return;
+    const bd=new Date(b.dateKey+'T'+b.time);
+    const remind=(b.remind||15)*60000;
+    const diff=bd-now;
+    if(diff>0&&diff<=remind&&diff>remind-60000) {
+      b._notified=true; toast('⏰ Σύντομα ξεκινά', `"${b.title}" → ${b.time}`);
+    }
+  });
+  renderReminders();
+}
+
+// ═══════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════
+function fmtS(s) {
+  const h=Math.floor(s/3600), m=Math.floor((s%3600)/60), sec=s%60;
+  if(h>0) return `${h}:${pad(m)}:${pad(sec)}`;
+  return `${pad(m)}:${pad(sec)}`;
+}
+function pad(n){ return n.toString().padStart(2,'0'); }
+function g(id){ return document.getElementById(id); }
+function v(id){ return document.getElementById(id).value; }
+function ce(tag,cls){ const el=document.createElement(tag); el.className=cls; return el; }
+function focus(id){ document.getElementById(id).focus(); }
+
+let toastTO=null;
+function toast(title,msg){
+  g('toastTitle').textContent=title; g('toastMsg').textContent=msg;
+  const t=g('toast'); t.classList.add('show');
+  if(toastTO) clearTimeout(toastTO);
+  toastTO=setTimeout(()=>t.classList.remove('show'),4500);
+}
+
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+document.getElementById('blockModal').addEventListener('click',function(e){
+  if(e.target===this) closeModal('blockModal');
+});
+
+init();
+</script>
+</body>
+</html>
